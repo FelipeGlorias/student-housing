@@ -3,12 +3,12 @@
 {% block title %}Home - SJSU Housing{% endblock %}
 
 {% block content %}
-<div class="jumbotron bg-light p-5 rounded">
+<div class="jumbotron bg-light p-5 rounded text-center">
     <h1 class="display-4">Find Your Perfect Student Housing</h1>
     <p class="lead">Discover affordable, convenient housing near SJSU campus</p>
     <hr class="my-4">
-    <form method="GET" action="{{ url_for('main.listings') }}" class="row g-3">
-        <div class="col-md-4">
+    <form method="GET" action="{{ url_for('main.listings') }}" class="row g-3 justify-content-center mt-4">
+        <div class="col-md-3">
             <input type="text" class="form-control" name="search" placeholder="Search listings...">
         </div>
         <div class="col-md-2">
@@ -26,7 +26,7 @@
                 <option value="4">4+</option>
             </select>
         </div>
-        <div class="col-md-2">
+        <div class="col-md-1">
             <button type="submit" class="btn btn-primary w-100">
                 <i class="fas fa-search"></i> Search
             </button>
@@ -34,6 +34,44 @@
     </form>
 </div>
 
-<div class="row my-5 text-center">
+<div class="row text-center my-5">
+    <div class="col-md-4 mb-4">
+        <i class="fas fa-home fa-3x mb-3"></i>
+        <h3>Browse Listings</h3>
+        <p>Explore student housing options near SJSU campus</p>
+    </div>
+    <div class="col-md-4 mb-4">
+        <i class="fas fa-user-plus fa-3x mb-3"></i>
+        <h3>Create Account</h3>
+        <p>Sign up to manage your bookings and preferences</p>
+    </div>
+    <div class="col-md-4 mb-4">
+        <i class="fas fa-key fa-3x mb-3"></i>
+        <h3>Book Easily</h3>
+        <p>Reserve housing quickly and securely</p>
+    </div>
+</div>
+
+<div class="row">
+    {% if listings %}
+        {% for listing in listings %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ listing.title }}</h5>
+                    <p class="card-text">{{ listing.description[:100] }}{% if listing.description|length > 100 %}...{% endif %}</p>
+                    <p class="card-text"><strong>${{ listing.price_per_month }} / month</strong></p>
+                    <a href="{{ url_for('main.listing_detail', listing_id=listing.id) }}" class="btn btn-primary">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="text-center">No listings found.</p>
+    {% endif %}
+</div>
+{% endblock %}
+">
     <div class="col-md-4 mb-4">
         <i class="fas fa-home
+
