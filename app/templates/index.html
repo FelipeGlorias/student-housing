@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Home - SJSU Housing{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded">
+    <h1 class="display-4">Find Your Perfect Student Housing</h1>
+    <p class="lead">Discover affordable, convenient housing near SJSU campus</p>
+    <hr class="my-4">
+    <form method="GET" action="{{ url_for('main.listings') }}" class="row g-3">
+        <div class="col-md-4">
+            <input type="text" class="form-control" name="search" placeholder="Search listings...">
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" name="min_price" placeholder="Min Price">
+        </div>
+        <div class="col-md-2">
+            <input type="number" class="form-control" name="max_price" placeholder="Max Price">
+        </div>
+        <div class="col-md-2">
+            <select class="form-select" name="bedrooms">
+                <option value="">Bedrooms</option>
+                <option value="1">1+</option>
+                <option value="2">2+</option>
+                <option value="3">3+</option>
+                <option value="4">4+</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </div>
+    </form>
+</div>
+
+<div class="row my-5 text-center">
+    <div class="col-md-4 mb-4">
+        <i class="fas fa-home

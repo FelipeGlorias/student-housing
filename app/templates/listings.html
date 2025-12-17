@@ -1,0 +1,40 @@
+
+{% extends "base.html" %}
+
+{% block title %}Browse Listings - SJSU Housing{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Available Listings</h2>
+
+<div class="row">
+    {% if listings %}
+        {% for listing in listings %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ listing.title }}</h5>
+                    <p class="card-text text-muted mb-1">
+                        <i class="fas fa-map-marker-alt"></i> {{ listing.address }}, {{ listing.city }}, {{ listing.state }}
+                    </p>
+                    <p class="card-text mb-2">
+                        <i class="fas fa-bed"></i> {{ listing.bedrooms }} bed
+                        <i class="fas fa-bath ms-2"></i> {{ listing.bathrooms }} bath
+                    </p>
+                    {% if listing.description %}
+                    <p class="card-text text-truncate mb-2">
+                        {{ listing.description[:100] }}{% if listing.description|length > 100 %}...{% endif %}
+                    </p>
+                    {% endif %}
+                    <h4 class="text-primary mt-auto mb-3">${{ "%.2f"|format(listing.price_per_month) }}/mo</h4>
+                    <a href="{{ url_for('main.listing_detail', listing_id=listing.id) }}" class="btn btn-primary w-100">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="alert alert-info">No listings found.</div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

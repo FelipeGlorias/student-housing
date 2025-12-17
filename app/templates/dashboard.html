@@ -1,0 +1,104 @@
+
+{% extends "base.html" %}
+
+{% block title %}Dashboard - SJSU Housing{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">My Dashboard</h2>
+
+<div class="row">
+   
+    <div class="col-md-6">
+
+        
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">My Listings</h4>
+            </div>
+            <div class="card-body">
+                {% if my_listings %}
+                    {% for listing in my_listings %}
+                    <div class="mb-3">
+                        <h5>{{ listing.title }}</h5>
+                        <p class="mb-1 text-muted">${{ "%.2f"|format(listing.price_per_month) }}/month</p>
+                        <a href="{{ url_for('main.listing_detail', listing_id=listing.id) }}" class="btn btn-sm btn-primary">View</a>
+                        <a href="{{ url_for('main.edit_listing', listing_id=listing.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                    </div>
+                    {% if not loop.last %}<hr>{% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>You haven't created any listings yet.</p>
+                    <a href="{{ url_for('main.create_listing') }}" class="btn btn-primary">Create Listing</a>
+                {% endif %}
+            </div>
+        </div>
+
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-info text-white">
+                <h4 class="mb-0">Booking Requests</h4>
+            </div>
+            <div class="card-body">
+                {% if received_bookings %}
+                    {% for booking in received_bookings %}
+                    <div class="mb-3">
+                        <h6>{{ booking.listing.title }}</h6>
+                        <p class="mb-1"><strong>From:</strong> {{ booking.tenant.username }}</p>
+                        <p class="mb-1"><strong>Dates:</strong> {{ booking.start_date }} to {{ booking.end_date }}</p>
+                        <p class="mb-1">
+                            <strong>Status:</strong>
+                            <span class="badge bg-{{ 'success' if booking.status == 'confirmed' else 'warning' }}">{{ booking.status }}</span>
+                        </p>
+                        {% if booking.status == 'pending' %}
+                        <form method="POST" action="{{ url_for('main.update_booking', booking_id=booking.id, status='confirmed') }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success">Confirm</button>
+                        </form>
+                        <form method="POST" action="{{ url_for('main.update_booking', booking_id=booking.id, status='cancelled') }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger">Decline</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% if not loop.last %}<hr>{% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>No booking requests yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    
+    <div class="col-md-6">
+        <div class="card shadow-sm">
+            <div class="card-header bg-success text-white">
+                <h4 class="mb-0">My Bookings</h4>
+            </div>
+            <div class="card-body">
+                {% if my_bookings %}
+                    {% for booking in my_bookings %}
+                    <div class="mb-3">
+                        <h6>{{ booking.listing.title }}</h6>
+                        <p class="mb-1"><strong>Dates:</strong> {{ booking.start_date }} to {{ booking.end_date }}</p>
+                        <p class="mb-1"><strong>Total:</strong> ${{ "%.2f"|format(booking.total_price) }}</p>
+                        <p class="mb-1">
+                            <strong>Status:</strong>
+                            <span class="badge bg-{{ 'success' if booking.status == 'confirmed' else 'warning' }}">{{ booking.status }}</span>
+                        </p>
+                        <a href="{{ url_for('main.listing_detail', listing_id=booking.listing_id) }}" class="btn btn-sm btn-primary">View Listing</a>
+                        {% if booking.status == 'pending' %}
+                        <form method="POST" action="{{ url_for('main.update_booking', booking_id=booking.id, status='cancelled') }}" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% if not loop.last %}<hr>{% endif %}
+                    {% endfor %}
+                {% else %}
+                    <p>You haven't made any bookings yet.</p>
+                    <a href="{{ url_for('main.listings') }}" class="btn btn-primary">Browse Listings</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
