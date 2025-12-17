@@ -28,7 +28,7 @@ class Listing(db.Model):
     amenities = db.Column(db.Text, nullable=True)
     is_active = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     bookings = db.relationship('Booking', backref='listing', lazy=True)
     reviews = db.relationship('Review', backref='listing', lazy=True)
@@ -43,7 +43,7 @@ class Booking(db.Model):
     message = db.Column(db.Text, nullable=True)
     status = db.Column(db.String(20), default='pending')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 class Review(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,3 +53,4 @@ class Review(db.Model):
     comment = db.Column(db.Text, nullable=True)
     review_type = db.Column(db.String(50), default='listing')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
