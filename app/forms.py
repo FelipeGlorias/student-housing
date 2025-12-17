@@ -1,20 +1,25 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, TextAreaField, FloatField, IntegerField, DateField, BooleanField, SelectField
+from wtforms import StringField, PasswordField, TextAreaField, FloatField, IntegerField, DateField, BooleanField, SelectField, SubmitField
 from wtforms.validators import DataRequired, Email, EqualTo, Length, ValidationError, NumberRange
 from app.models import User
 
+# Registration Form
 class RegisterForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired(), Length(min=3, max=80)])
     email = StringField('Email', validators=[DataRequired(), Email()])
     full_name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=100)])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
     confirm_password = PasswordField('Confirm Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
 
+# Login Form
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember = BooleanField('Remember Me')
+    submit = SubmitField('Login')
 
+# Listing Form
 class ListingForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(min=5, max=200)])
     description = TextAreaField('Description', validators=[DataRequired(), Length(min=20, max=2000)])
@@ -29,16 +34,20 @@ class ListingForm(FlaskForm):
     available_from = DateField('Available From', validators=[DataRequired()], format='%Y-%m-%d')
     available_to = DateField('Available To', format='%Y-%m-%d')
     amenities = TextAreaField('Amenities (comma-separated)')
+    submit = SubmitField('Create Listing')
 
+# Booking Form
 class BookingForm(FlaskForm):
     start_date = DateField('Start Date', validators=[DataRequired()], format='%Y-%m-%d')
     end_date = DateField('End Date', validators=[DataRequired()], format='%Y-%m-%d')
     message = TextAreaField('Message to Owner', validators=[Length(max=500)])
+    submit = SubmitField('Book')
 
     def validate_end_date(self, field):
         if field.data <= self.start_date.data:
             raise ValidationError('End date must be after start date')
 
+# Review Form
 class ReviewForm(FlaskForm):
     rating = SelectField('Rating', choices=[
         ('5', '5 Stars - Excellent'),
@@ -48,7 +57,13 @@ class ReviewForm(FlaskForm):
         ('1', '1 Star - Terrible')
     ], validators=[DataRequired()])
     comment = TextAreaField('Review', validators=[DataRequired(), Length(min=10, max=1000)])
+    submit = SubmitField('Submit Review')
 
+# Search Form
 class SearchForm(FlaskForm):
     search = StringField('Search')
-    min_pri_
+    min_price = FloatField('Min Price', validators=[NumberRange(min=0)], default=0)
+    max_price = FloatField('Max Price', validators=[NumberRange(min=0)], default=10000)
+    city = StringField('City')
+    state = StringField('State', validators=[Length(max=2)])
+    submit = SubmitField('Search')
